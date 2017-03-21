@@ -24,105 +24,55 @@ using std::ifstream;
 // Our vertices. Three consecutive floats give a 3D vertex; Three consecutive vertices give a triangle.
 // A cube has 6 faces with 2 triangles each, so this makes 6*2=12 triangles, and 12*3 vertices
 static const GLfloat g_vertex_buffer_data[] = {
-	-1.0f,-1.0f,-1.0f, // triangle 1 : begin
-	-1.0f,-1.0f, 1.0f,
-	-1.0f, 1.0f, 1.0f, // triangle 1 : end
+	-1.0f,-1.0f,-1.0f, 	0.8f,  0.2f,  0.2f, // triangle 1 : begin
+	-1.0f,-1.0f, 1.0f,	0.8f,  0.2f,  0.2f,
+	-1.0f, 1.0f, 1.0f, 	0.8f,  0.2f,  0.2f, // triangle 1 : end
 
-	1.0f, 1.0f,-1.0f, // triangle 2 : begin
-	-1.0f,-1.0f,-1.0f,
-	-1.0f, 1.0f,-1.0f, // triangle 2 : end
+	1.0f, 1.0f,-1.0f, 0.2f, 0.8f, 0.2f,// triangle 2 : begin
+	-1.0f,-1.0f,-1.0f, 0.2f, 0.8f, 0.2f,
+	-1.0f, 1.0f,-1.0f, 0.2f, 0.8f, 0.2f, // triangle 2 : end
 
-	1.0f,-1.0f, 1.0f,
-	-1.0f,-1.0f,-1.0f,
-	1.0f,-1.0f,-1.0f,
+	1.0f,-1.0f, 1.0f, 0.2f,  0.2f,  0.8f,
+	-1.0f,-1.0f,-1.0f, 0.2f,  0.2f,  0.8f,
+	1.0f,-1.0f,-1.0f, 0.2f,  0.2f,  0.8f,
 
-	1.0f, 1.0f,-1.0f,
-	1.0f,-1.0f,-1.0f,
-	-1.0f,-1.0f,-1.0f,
+	1.0f, 1.0f,-1.0f, 0.2f,  0.8f,  0.2f,
+	1.0f,-1.0f,-1.0f, 0.2f,  0.8f,  0.2f,
+	-1.0f,-1.0f,-1.0f, 0.2f,  0.8f,  0.2f,
 
-	-1.0f,-1.0f,-1.0f,
-	-1.0f, 1.0f, 1.0f,
-	-1.0f, 1.0f,-1.0f,
+	-1.0f,-1.0f,-1.0f, 0.8f,  0.2f,  0.2f,
+	-1.0f, 1.0f, 1.0f, 0.8f,  0.2f,  0.2f,
+	-1.0f, 1.0f,-1.0f, 0.8f,  0.2f,  0.2f,
 
-	1.0f,-1.0f, 1.0f,
-	-1.0f,-1.0f, 1.0f,
-	-1.0f,-1.0f,-1.0f,
+	1.0f,-1.0f, 1.0f, 0.2f,  0.2f,  0.8f,
+	-1.0f,-1.0f, 1.0f, 0.2f,  0.2f,  0.8f,
+	-1.0f,-1.0f,-1.0f, 0.2f,  0.2f,  0.8f,
 
-	-1.0f, 1.0f, 1.0f,
-	-1.0f,-1.0f, 1.0f,
-	1.0f,-1.0f, 1.0f,
+	-1.0f, 1.0f, 1.0f, 0.2f,  0.8f,  0.2f,
+	-1.0f,-1.0f, 1.0f, 0.2f,  0.8f,  0.2f,
+	1.0f,-1.0f, 1.0f, 0.2f,  0.8f,  0.2f,
 
-	1.0f, 1.0f, 1.0f,
-	1.0f,-1.0f,-1.0f,
-	1.0f, 1.0f,-1.0f,
+	1.0f, 1.0f, 1.0f, 0.8f,  0.2f,  0.2f,
+	1.0f,-1.0f,-1.0f, 0.8f,  0.2f,  0.2f,
+	1.0f, 1.0f,-1.0f, 0.8f,  0.2f,  0.2f,
 
-	1.0f,-1.0f,-1.0f,
-	1.0f, 1.0f, 1.0f,
-	1.0f,-1.0f, 1.0f,
+	1.0f,-1.0f,-1.0f, 0.8f,  0.2f,  0.2f,
+	1.0f, 1.0f, 1.0f, 0.8f,  0.2f,  0.2f,
+	1.0f,-1.0f, 1.0f, 0.8f,  0.2f,  0.2f,
 
-	1.0f, 1.0f, 1.0f,
-	1.0f, 1.0f,-1.0f,
-	-1.0f, 1.0f,-1.0f,
+	1.0f, 1.0f, 1.0f, 0.2f,  0.2f,  0.8f,
+	1.0f, 1.0f,-1.0f, 0.2f,  0.2f,  0.8f,
+	-1.0f, 1.0f,-1.0f, 0.2f,  0.2f,  0.8f,
 
-	1.0f, 1.0f, 1.0f,
-	-1.0f, 1.0f,-1.0f,
-	-1.0f, 1.0f, 1.0f,
+	1.0f, 1.0f, 1.0f, 0.2f,  0.2f,  0.8f,
+	-1.0f, 1.0f,-1.0f, 0.2f,  0.2f,  0.8f,
+	-1.0f, 1.0f, 1.0f, 0.2f,  0.2f,  0.8f,
 
-	1.0f, 1.0f, 1.0f,
-	-1.0f, 1.0f, 1.0f,
-	1.0f,-1.0f, 1.0f
+	1.0f, 1.0f, 1.0f, 0.2f,  0.8f,  0.2f,
+	-1.0f, 1.0f, 1.0f, 0.2f,  0.8f,  0.2f,
+	1.0f,-1.0f, 1.0f, 0.2f,  0.8f,  0.2f
 };
 
-// One color for each vertex. They were generated randomly.
-static const GLfloat g_color_buffer_data[] = {
-	0.8f,  0.2f,  0.2f,
-	0.8f,  0.2f,  0.2f,
-	0.8f,  0.2f,  0.2f,
-
-	0.2f,  0.8f,  0.2f,
-	0.2f,  0.8f,  0.2f,
-	0.2f,  0.8f,  0.2f,
-
-	0.2f,  0.2f,  0.8f,
-	0.2f,  0.2f,  0.8f,
-	0.2f,  0.2f,  0.8f,
-
-	0.2f,  0.8f,  0.2f,
-	0.2f,  0.8f,  0.2f,
-	0.2f,  0.8f,  0.2f,
-
-	0.8f,  0.2f,  0.2f,
-	0.8f,  0.2f,  0.2f,
-	0.8f,  0.2f,  0.2f,
-
-	0.2f,  0.2f,  0.8f,
-	0.2f,  0.2f,  0.8f,
-	0.2f,  0.2f,  0.8f,
-
-	0.2f,  0.8f,  0.2f,
-	0.2f,  0.8f,  0.2f,
-	0.2f,  0.8f,  0.2f,
-
-	0.8f,  0.2f,  0.2f,
-	0.8f,  0.2f,  0.2f,
-	0.8f,  0.2f,  0.2f,
-
-	0.8f,  0.2f,  0.2f,
-	0.8f,  0.2f,  0.2f,
-	0.8f,  0.2f,  0.2f,
-
-	0.2f,  0.2f,  0.8f,
-	0.2f,  0.2f,  0.8f,
-	0.2f,  0.2f,  0.8f,
-
-	0.2f,  0.2f,  0.8f,
-	0.2f,  0.2f,  0.8f,
-	0.2f,  0.2f,  0.8f,
-
-	0.2f,  0.8f,  0.2f,
-	0.2f,  0.8f,  0.2f,
-	0.2f,  0.8f,  0.2f
-};
 
 GLuint LoadShaders(const char * vertex_file_path, const char * fragment_file_path) {
 
@@ -256,9 +206,6 @@ int main()
 	// Accept fragment if it closer to the camera than the former one
 	glDepthFunc(GL_LESS);
 
-	GLuint VertexArrayID;
-	glGenVertexArrays(1, &VertexArrayID);
-	glBindVertexArray(VertexArrayID);
 
 	GLuint programID = LoadShaders("Shaders/simple.vertexshader", "Shaders/simple.fragmentshader ");
 
@@ -273,6 +220,50 @@ int main()
 		glm::vec3(0, 0, 0), // and looks at the origin
 		glm::vec3(0, 1, 0)  // Head is up (set to 0,-1,0 to look upside-down)
 		);
+
+
+
+
+	// This will identify our vertex buffer
+	GLuint vertexbuffer;
+	// Generate 1 buffer, put the resulting identifier in vertexbuffer
+	glGenBuffers(1, &vertexbuffer);
+	// The following commands will talk about our 'vertexbuffer' buffer
+	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
+
+
+	GLuint vertexarray;
+	glGenVertexArrays(1, &vertexarray);
+	glBindVertexArray(vertexarray);
+
+
+	// Give our vertices to OpenGL.
+	glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data), g_vertex_buffer_data, GL_STATIC_DRAW);
+
+	glVertexAttribPointer(
+		0,                  // attribute 0. No particular reason for 0, but must match the layout in the shader.
+		3,                  // size
+		GL_FLOAT,           // type
+		GL_FALSE,           // normalized?
+		6 * sizeof(GLfloat),                  // stride
+		0           // array buffer offset
+	);
+	glEnableVertexAttribArray(0);
+
+
+	// 2nd attribute buffer : colors
+	glVertexAttribPointer(
+		1,                                // attribute. No particular reason for 1, but must match the layout in the shader.
+		3,                                // size
+		GL_FLOAT,                         // type
+		GL_FALSE,                         // normalized?
+		6 * sizeof(GLfloat),                                // stride
+		(GLvoid*)(3 * sizeof(GLfloat))                 // array buffer offset
+	);
+	glEnableVertexAttribArray(1);
+	glBindVertexArray(0);
+
+
 
 	// run the main loop
 	bool running = true;
@@ -318,52 +309,12 @@ int main()
 
 		// draw...
 
-		// This will identify our vertex buffer
-		GLuint vertexbuffer;
-		// Generate 1 buffer, put the resulting identifier in vertexbuffer
-		glGenBuffers(1, &vertexbuffer);
-		// The following commands will talk about our 'vertexbuffer' buffer
-		glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
-		// Give our vertices to OpenGL.
-		glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data), g_vertex_buffer_data, GL_STATIC_DRAW);
 
 
-		GLuint colorbuffer;
-		glGenBuffers(1, &colorbuffer);
-		glBindBuffer(GL_ARRAY_BUFFER, colorbuffer);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(g_color_buffer_data), g_color_buffer_data, GL_STATIC_DRAW);
-
-
-
-		// 1rst attribute buffer : vertices
-		glEnableVertexAttribArray(0);
-		glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
-		glVertexAttribPointer(
-			0,                  // attribute 0. No particular reason for 0, but must match the layout in the shader.
-			3,                  // size
-			GL_FLOAT,           // type
-			GL_FALSE,           // normalized?
-			0,                  // stride
-			(void*)0            // array buffer offset
-			);
-
-
-		// 2nd attribute buffer : colors
-		glEnableVertexAttribArray(1);
-		glBindBuffer(GL_ARRAY_BUFFER, colorbuffer);
-		glVertexAttribPointer(
-			1,                                // attribute. No particular reason for 1, but must match the layout in the shader.
-			3,                                // size
-			GL_FLOAT,                         // type
-			GL_FALSE,                         // normalized?
-			0,                                // stride
-			(void*)0                          // array buffer offset
-			);
-
-
-		// Draw the triangle !		
+		// Draw the triangle !	
+		glBindVertexArray(vertexarray);
 		glDrawArrays(GL_TRIANGLES, 0, 12 * 3); // 12*3 indices starting at 0 -> 12 triangles -> 6 squares
-		glDisableVertexAttribArray(0);
+		glBindVertexArray(0);
 
 		// end the current frame (internally swaps the front and back buffers)
 		window.display();
