@@ -3,9 +3,11 @@
 // Interpolated values from the vertex shaders
 in vec3 fragment_color;
 in vec3 fragment_normal;
+in vec3 fragment_position;
 
 uniform vec3 light_color;
 uniform vec3 light_dir;
+uniform vec3 view_position;
 
 // Ouput data
 out vec3 color;
@@ -23,7 +25,14 @@ void main(){
 	vec3 diffuse = diff * light_color;
 
 
+	float specular_strength = 0.5f;
+	vec3 viewDir = normalize(view_position - fragment_position);
+	vec3 reflectDir = reflect(-light_dir_norm, norm);  
+	float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);
+	vec3 specular = specular_strength * spec * light_color;  
+
+
 	// Output color = color specified in the vertex shader, 
 	// interpolated between all 3 surrounding vertices
-	color = (ambient + diffuse) * fragment_color;
+	color = (ambient + diffuse + specular) * fragment_color;
 }

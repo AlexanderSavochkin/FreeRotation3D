@@ -86,6 +86,7 @@ static const GLfloat g_vertex_buffer_data[] = {
     1.0f,-1.0f, 1.0f, 0.2f,  0.8f,  0.2f, 0.0f, 0.0f, 1.0f,
 };
 
+glm::vec3 camera_position(4, 3, -3);
 
 GLuint LoadShaders(const char * vertex_file_path, const char * fragment_file_path) {
 
@@ -231,13 +232,10 @@ int main()
     glm::mat4 Projection = glm::perspective(45.0f, 4.0f / 3.0f, 0.1f, 100.0f);
     // Camera matrix
     glm::mat4 View = glm::lookAt(
-        glm::vec3(4, 3, -3), // Camera is at (4,3,-3), in World Space
+        camera_position, // Camera is at (4,3,-3), in World Space
         glm::vec3(0, 0, 0), // and looks at the origin
         glm::vec3(0, 1, 0)  // Head is up (set to 0,-1,0 to look upside-down)
         );
-
-
-
 
     // This will identify our vertex buffer
     GLuint vertexbuffer;
@@ -293,9 +291,11 @@ int main()
 
     GLint light_color = glGetUniformLocation(programID, "light_color");
     GLint light_dir = glGetUniformLocation(programID, "light_dir");
+    GLint camera_position_ref = glGetUniformLocation(programID, "view_position");
 
     glUniform3f(light_color, 1.0f, 1.0f, 1.0f);
     glUniform3f(light_dir, 0.0f, -1.0f, 1.0f);
+    glUniform3f(camera_position_ref, camera_position.x, camera_position.y, camera_position.z);
 
     // run the main loop
     bool running = true;

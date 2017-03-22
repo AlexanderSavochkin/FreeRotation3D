@@ -39,7 +39,7 @@ const mat4& RotationalMechanics::getOrientation() const
 void RotationalMechanics::setInertia(vec3 diag)
 {
 	tensorOfInertia = glm::diagonal4x4( vec4(diag, 0.0f) );
-	iTensorOfInertia = mat4(0.0);
+	iTensorOfInertia = mat4(0.0f);
 	for (int i = 0; i < 3; ++i)
-		iTensorOfInertia[i][i] = 1.0 / tensorOfInertia[i][i];
+		iTensorOfInertia[i][i] = 1.0f / tensorOfInertia[i][i];
 }
