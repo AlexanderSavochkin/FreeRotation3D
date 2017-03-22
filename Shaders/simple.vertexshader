@@ -4,12 +4,13 @@
 layout(location = 0) in vec3 position;
 layout(location = 1) in vec3 color;
 layout(location = 2) in vec3 normal;
-
+layout(location = 3) in vec2 texturecoords;
 
 // Output data ; will be interpolated for each fragment.
 out vec3 fragment_color;
 out vec3 fragment_normal;
 out vec3 fragment_position;
+out vec2 fragment_texturecoords; 
 
 // Values that stay constant for the whole mesh.
 uniform mat4 MVP;
@@ -25,5 +26,7 @@ void main(){
 	fragment_normal = mat3(iMt) * normal;  
 	// The color of each vertex will be interpolated
 	// to produce the color of each fragment
+	fragment_texturecoords = texturecoords;
+
 	fragment_color = color;
 }

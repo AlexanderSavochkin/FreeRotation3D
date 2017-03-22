@@ -4,15 +4,19 @@
 in vec3 fragment_color;
 in vec3 fragment_normal;
 in vec3 fragment_position;
+in vec2 fragment_texturecoords;
 
 uniform vec3 light_color;
 uniform vec3 light_dir;
 uniform vec3 view_position;
 
+uniform sampler2D texture1;
+
 // Ouput data
 out vec3 color;
 
 void main(){
+	vec3 surface_color = fragment_color + texture(texture1, fragment_texturecoords).xyz;
 
 	// Ambient
 	float ambient_strength = 0.1f;
@@ -34,5 +38,5 @@ void main(){
 
 	// Output color = color specified in the vertex shader, 
 	// interpolated between all 3 surrounding vertices
-	color = (ambient + diffuse + specular) * fragment_color;
+	color = (ambient + diffuse + specular) * surface_color;
 }

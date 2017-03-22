@@ -7,6 +7,7 @@
 #include <GL/gl.h>
 
 #include <SFML/OpenGL.hpp>
+#include <SFML/Graphics.hpp>
 
 #include <fstream>
 #include <string>
@@ -26,65 +27,67 @@ using std::ifstream;
 // A cube has 6 faces with 2 triangles each, so this makes 6*2=12 triangles, and 12*3 vertices
 static const GLfloat g_vertex_buffer_data[] = {
     //Left
-    -1.0f,-1.0f,-1.0f, 	0.8f,  0.2f,  0.2f, -1.0f, 0.0f, 0.0f, // triangle 1 : begin
-    -1.0f,-1.0f, 1.0f,	0.8f,  0.2f,  0.2f, -1.0f, 0.0f, 0.0f,
-    -1.0f, 1.0f, 1.0f, 	0.8f,  0.2f,  0.2f, -1.0f, 0.0f, 0.0f, // triangle 1 : end
+    -1.0f,-1.0f,-1.0f, 0.8f, 0.2f, 0.2f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f, // triangle 1 : begin
+    -1.0f,-1.0f, 1.0f, 0.8f, 0.2f, 0.2f, -1.0f, 0.0f, 0.0f, 0.0f, 1.0f,
+    -1.0f, 1.0f, 1.0f, 0.8f, 0.2f, 0.2f, -1.0f, 0.0f, 0.0f, 1.0f, 0.0f, // triangle 1 : end
 
     //Back
-    1.0f, 1.0f,-1.0f, 0.2f, 0.8f, 0.2f, 0.0f, 0.0f, -1.0f, // triangle 2 : begin
-    -1.0f,-1.0f,-1.0f, 0.2f, 0.8f, 0.2f, 0.0f, 0.0f, -1.0f,
-    -1.0f, 1.0f,-1.0f, 0.2f, 0.8f, 0.2f, 0.0f, 0.0f, -1.0f, // triangle 2 : end
+    1.0f, 1.0f,-1.0f, 0.2f, 0.8f, 0.2f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f, // triangle 2 : begin
+    -1.0f,-1.0f,-1.0f, 0.2f, 0.8f, 0.2f, 0.0f, 0.0f, -1.0f, 0.0f, 1.0f,
+    -1.0f, 1.0f,-1.0f, 0.2f, 0.8f, 0.2f, 0.0f, 0.0f, -1.0f, 1.0f, 0.0f, // triangle 2 : end
 
     //Bottom
-    1.0f,-1.0f, 1.0f, 0.2f,  0.2f,  0.8f, 0.0f, -1.0f, 0.0f,
-    -1.0f,-1.0f,-1.0f, 0.2f,  0.2f,  0.8f, 0.0f, -1.0f, 0.0f,
-    1.0f,-1.0f,-1.0f, 0.2f,  0.2f,  0.8f, 0.0f, -1.0f, 0.0f,
+    1.0f,-1.0f, 1.0f, 0.2f, 0.2f, 0.8f, 0.0f, -1.0f, 0.0f, 0.0f, 0.0f,
+    -1.0f,-1.0f,-1.0f, 0.2f, 0.2f, 0.8f, 0.0f, -1.0f, 0.0f, 0.0f, 1.0f,
+    1.0f,-1.0f,-1.0f, 0.2f, 0.2f, 0.8f, 0.0f, -1.0f, 0.0f, 1.0f, 0.0f,
 
     //Back
-    1.0f, 1.0f,-1.0f, 0.2f,  0.8f,  0.2f, 0.0f, 0.0f, -1.0f,
-    1.0f,-1.0f,-1.0f, 0.2f,  0.8f,  0.2f, 0.0f, 0.0f, -1.0f,
-    -1.0f,-1.0f,-1.0f, 0.2f,  0.8f,  0.2f, 0.0f, 0.0f, -1.0f,
+    1.0f, 1.0f,-1.0f, 0.2f, 0.8f, 0.2f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f,
+    1.0f,-1.0f,-1.0f, 0.2f, 0.8f, 0.2f, 0.0f, 0.0f, -1.0f, 0.0f, 1.0f,
+    -1.0f,-1.0f,-1.0f, 0.2f, 0.8f, 0.2f, 0.0f, 0.0f, -1.0f, 1.0f, 0.0f,
 
     //Left
-    -1.0f,-1.0f,-1.0f, 0.8f,  0.2f,  0.2f, -1.0f, 0.0f, 0.0f,
-    -1.0f, 1.0f, 1.0f, 0.8f,  0.2f,  0.2f, -1.0f, 0.0f, 0.0f,
-    -1.0f, 1.0f,-1.0f, 0.8f,  0.2f,  0.2f, -1.0f, 0.0f, 0.0f,
+    -1.0f,-1.0f,-1.0f, 0.8f, 0.2f, 0.2f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+    -1.0f, 1.0f, 1.0f, 0.8f, 0.2f, 0.2f, -1.0f, 0.0f, 0.0f, 0.0f, 1.0f,
+    -1.0f, 1.0f,-1.0f, 0.8f, 0.2f, 0.2f, -1.0f, 0.0f, 0.0f, 1.0f, 0.0f,
 
     //Bottom
-    1.0f,-1.0f, 1.0f, 0.2f,  0.2f,  0.8f, 0.0f, -1.0f, 0.0f,
-    -1.0f,-1.0f, 1.0f, 0.2f,  0.2f,  0.8f, 0.0f, -1.0f, 0.0f,
-    -1.0f,-1.0f,-1.0f, 0.2f,  0.2f,  0.8f, 0.0f, -1.0f, 0.0f,
+    1.0f,-1.0f, 1.0f, 0.2f, 0.2f, 0.8f, 0.0f, -1.0f, 0.0f, 0.0f, 0.0f,
+    -1.0f,-1.0f, 1.0f, 0.2f, 0.2f, 0.8f, 0.0f, -1.0f, 0.0f, 0.0f, 1.0f,
+    -1.0f,-1.0f,-1.0f, 0.2f, 0.2f, 0.8f, 0.0f, -1.0f, 0.0f, 1.0f, 0.0f,
 
     //Front
-    -1.0f, 1.0f, 1.0f, 0.2f,  0.8f,  0.2f, 0.0f, 0.0f, 1.0f,
-    -1.0f,-1.0f, 1.0f, 0.2f,  0.8f,  0.2f, 0.0f, 0.0f, 1.0f,
-    1.0f,-1.0f, 1.0f, 0.2f,  0.8f,  0.2f, 0.0f, 0.0f, 1.0f,
+    -1.0f, 1.0f, 1.0f, 0.2f, 0.8f, 0.2f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
+    -1.0f,-1.0f, 1.0f, 0.2f, 0.8f, 0.2f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f,
+    1.0f,-1.0f, 1.0f, 0.2f, 0.8f, 0.2f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f,
 
     //Right
-    1.0f, 1.0f, 1.0f, 0.8f,  0.2f,  0.2f, 1.0f, 0.0f, 0.0f,
-    1.0f,-1.0f,-1.0f, 0.8f,  0.2f,  0.2f, 1.0f, 0.0f, 0.0f,
-    1.0f, 1.0f,-1.0f, 0.8f,  0.2f,  0.2f, 1.0f, 0.0f, 0.0f,
+    1.0f, 1.0f, 1.0f, 0.8f, 0.2f, 0.2f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+    1.0f,-1.0f,-1.0f, 0.8f, 0.2f, 0.2f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f,
+    1.0f, 1.0f,-1.0f, 0.8f, 0.2f, 0.2f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f,
 
     //Right
-    1.0f,-1.0f,-1.0f, 0.8f,  0.2f,  0.2f, 1.0f, 0.0f, 0.0f,
-    1.0f, 1.0f, 1.0f, 0.8f,  0.2f,  0.2f, 1.0f, 0.0f, 0.0f,
-    1.0f,-1.0f, 1.0f, 0.8f,  0.2f,  0.2f, 1.0f, 0.0f, 0.0f,
+    1.0f,-1.0f,-1.0f, 0.8f, 0.2f, 0.2f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+    1.0f, 1.0f, 1.0f, 0.8f, 0.2f, 0.2f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f,
+    1.0f,-1.0f, 1.0f, 0.8f, 0.2f, 0.2f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f,
 
     //Top
-    1.0f, 1.0f, 1.0f, 0.2f,  0.2f,  0.8f, 0.0f, 1.0f, 0.0f,
-    1.0f, 1.0f,-1.0f, 0.2f,  0.2f,  0.8f, 0.0f, 1.0f, 0.0f,
-    -1.0f, 1.0f,-1.0f, 0.2f,  0.2f,  0.8f, 0.0f, 1.0f, 0.0f,
+    1.0f, 1.0f, 1.0f, 0.2f, 0.2f, 0.8f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f,
+    1.0f, 1.0f,-1.0f, 0.2f, 0.2f, 0.8f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f,
+    -1.0f, 1.0f,-1.0f, 0.2f, 0.2f, 0.8f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f,
 
     //Top
-    1.0f, 1.0f, 1.0f, 0.2f,  0.2f,  0.8f, 0.0f, 1.0f, 0.0f,
-    -1.0f, 1.0f,-1.0f, 0.2f,  0.2f,  0.8f, 0.0f, 1.0f, 0.0f,
-    -1.0f, 1.0f, 1.0f, 0.2f,  0.2f,  0.8f, 0.0f, 1.0f, 0.0f,
+    1.0f, 1.0f, 1.0f, 0.2f, 0.2f, 0.8f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f,
+    -1.0f, 1.0f,-1.0f, 0.2f, 0.2f, 0.8f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f,
+    -1.0f, 1.0f, 1.0f, 0.2f, 0.2f, 0.8f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f,
 
     //Front
-    1.0f, 1.0f, 1.0f, 0.2f,  0.8f,  0.2f, 0.0f, 0.0f, 1.0f,
-    -1.0f, 1.0f, 1.0f, 0.2f,  0.8f,  0.2f, 0.0f, 0.0f, 1.0f,
-    1.0f,-1.0f, 1.0f, 0.2f,  0.8f,  0.2f, 0.0f, 0.0f, 1.0f,
+    1.0f, 1.0f, 1.0f, 0.2f, 0.8f, 0.2f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
+    -1.0f, 1.0f, 1.0f, 0.2f, 0.8f, 0.2f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f,
+    1.0f,-1.0f, 1.0f, 0.2f, 0.8f, 0.2f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f,
 };
+
+const char texturename[] = "woodtexture.jpg";
 
 glm::vec3 camera_position(4, 3, -3);
 
@@ -258,7 +261,7 @@ int main()
         3,                  // size
         GL_FLOAT,           // type
         GL_FALSE,           // normalized?
-        9 * sizeof(GLfloat),                  // stride
+        11 * sizeof(GLfloat),                  // stride
         0           // array buffer offset
     );
     glEnableVertexAttribArray(0);
@@ -270,7 +273,7 @@ int main()
         3,                                // size
         GL_FLOAT,                         // type
         GL_FALSE,                         // normalized?
-        9 * sizeof(GLfloat),                                // stride
+        11 * sizeof(GLfloat),                                // stride
         (GLvoid*)(3 * sizeof(GLfloat))                 // array buffer offset
     );
     glEnableVertexAttribArray(1);
@@ -281,10 +284,22 @@ int main()
         3,                                // size
         GL_FLOAT,                         // type
         GL_FALSE,                         // normalized?
-        9 * sizeof(GLfloat),                                // stride
+        11 * sizeof(GLfloat),                                // stride
         (GLvoid*)(6 * sizeof(GLfloat))                 // array buffer offset
     );
     glEnableVertexAttribArray(2);
+    
+    // 4th attribute buffer : texture coords
+    glVertexAttribPointer(
+        3,                                // attribute. Must match the layout in the shader.
+        2,                                // size
+        GL_FLOAT,                         // type
+        GL_FALSE,                         // normalized?
+        11 * sizeof(GLfloat),                                // stride
+        (GLvoid*)(9 * sizeof(GLfloat))                 // array buffer offset
+    );
+    glEnableVertexAttribArray(3);
+    
     glBindVertexArray(0);
 
     glUseProgram(programID);
@@ -296,6 +311,36 @@ int main()
     glUniform3f(light_color, 1.0f, 1.0f, 1.0f);
     glUniform3f(light_dir, 0.0f, -1.0f, 1.0f);
     glUniform3f(camera_position_ref, camera_position.x, camera_position.y, camera_position.z);
+
+
+
+
+    sf::Image img_data;
+    if (!img_data.loadFromFile(texturename))
+    {
+        fprintf(stderr, "Could not load %s\n", texturename);
+        return -1;
+    }
+
+    GLuint texture_handle;
+    glGenTextures(1, &texture_handle);
+    glBindTexture(GL_TEXTURE_2D, texture_handle);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	// Set texture wrapping to GL_REPEAT
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    // Set texture filtering
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    glTexImage2D(
+        GL_TEXTURE_2D, 0, GL_RGBA,
+        img_data.getSize().x, img_data.getSize().y,
+        0,
+        GL_RGBA, GL_UNSIGNED_BYTE, img_data.getPixelsPtr()
+    );
+    glGenerateMipmap(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, 0); // Unbind texture when done, so we won't accidentily mess up our texture.
+
 
     // run the main loop
     bool running = true;
@@ -332,6 +377,7 @@ int main()
 
 
         // clear the buffers
+        glClearColor(0.2f, 0.2f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         // Use our shader
@@ -344,6 +390,9 @@ int main()
 
         // draw...
 
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, texture_handle);
+        glUniform1i(glGetUniformLocation(programID, "texture1"), 0);
 
 
         // Draw the triangle !	
