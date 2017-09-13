@@ -19,8 +19,11 @@
 using namespace glm;
 
 #include "RotationalMechanics.h"
+#include "QuaternionDirectIntegrationRotationalMechanics.h"
+#include "MatrixRotationalMechanics.h"
 
 using std::ifstream;
+using std::string;
 
 
 // Our vertices. Three consecutive floats give a 3D vertex; Three consecutive vertices give a triangle.
@@ -206,8 +209,8 @@ int main(int argc, char **argv)
     }
 
     RotationalMechanics *mechanicalModel = CreateRotationMechanicsModel(modelName);
-    mechanicalModel.setAngularMomentum(vec3(0.005f, 14.0f, 0.005f));
-    mechanicalModel.setInertia(vec3(
+    mechanicalModel->setAngularMomentum(vec3(0.005f, 14.0f, 0.005f));
+    mechanicalModel->setInertia(vec3(
         height*height + depth*depth, 
         width*width + depth*depth,
         height*height + width*width));
@@ -358,7 +361,7 @@ int main(int argc, char **argv)
         // Model matrix : an identity matrix (model will be at the origin)
         //glm::mat4 Model = glm::mat4(1.0f);
         // Our ModelViewProjection : multiplication of our 3 matrices
-        const glm::mat4& Orientation = mechanicalModel.getOrientation();
+        const glm::mat4& Orientation = mechanicalModel->getOrientationMatrix();
         glm::mat4 MVP = Projection * View * Orientation * glm::scale(glm::mat4(1.0f), vec3(1.0, 1.73, 2.24)); // Remember, matrix multiplication is the other way around		
         glm::mat4 iMt = glm::inverseTranspose(Orientation);
 
@@ -380,7 +383,7 @@ int main(int argc, char **argv)
         //Update bar orientation
         float dTIme = Clock.getElapsedTime().asSeconds();
         Clock.restart();
-        mechanicalModel.update(dTIme);
+        mechanicalModel->update(dTIme);
 
 
         // clear the buffers

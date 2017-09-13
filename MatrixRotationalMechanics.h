@@ -1,5 +1,6 @@
 ﻿#pragma once
 
+#include "RotationalMechanics.h"
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -15,15 +16,15 @@ class MatrixRotationalMechanics : public RotationalMechanics
 	double width, height, depth;
 
 public:
-	RotationalMechanics();
-	virtual ~RotationalMechanics();
+	MatrixRotationalMechanics();
+	virtual ~MatrixRotationalMechanics();
 
-	void setAngularMomentum(const vec3& _angularMomentum);
+	virtual void setAngularMomentum(const vec3& _angularMomentum);
 
-	void setInertia(vec3 diag);
+	virtual void setInertia(vec3 diag);
 
-	void update(float dt);
+	virtual void update(float dt);
 
-	const mat4& getOrientation() const;
+	virtual const mat4& getOrientationMatrix() const;
 };
 

@@ -1,6 +1,8 @@
 #include "MatrixRotationalMechanics.h"
 #include <glm/gtx/matrix_operation.hpp>
 
+using glm::vec4;
+
 MatrixRotationalMechanics::MatrixRotationalMechanics()
 {
 }
@@ -31,7 +33,7 @@ void MatrixRotationalMechanics::update(float dt)
 	tensorOfInertia = iQ * tensorOfInertia * Q;
 }
 
-const mat4& MatrixRotationalMechanics::getOrientation() const
+const mat4& MatrixRotationalMechanics::getOrientationMatrix() const
 { 
 	return orientation; 
 }

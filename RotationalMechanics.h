@@ -1,3 +1,5 @@
+#pragma once
+
 #include <glm/glm.hpp>
 
 using glm::mat4;
@@ -10,4 +12,4 @@ public:
     virtual void setAngularMomentum(const vec3& _angularMomentum) = 0;
     virtual void setInertia(vec3 diag) = 0;
     virtual void update(float dt) = 0;
-}
+};

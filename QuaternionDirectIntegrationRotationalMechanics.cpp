@@ -1,4 +1,4 @@
-#include "RotationalMechanics.h"
+#include "QuaternionDirectIntegrationRotationalMechanics.h"
 #include <glm/gtx/matrix_operation.hpp>
 #include <glm/gtx/quaternion.hpp>
 
@@ -22,11 +22,6 @@ void QuaternionDirectIntegrationRotationalMechanics::update(float dt)
 	orientation = orientation + d_orientation_dt * dt;
 	d_orientation_dt = d_orientation_dt + d2_Orientation_d2t(orientation, d_orientation_dt) * dt;
 	orientation = normalize(orientation);
-}
-
-const quat& QuaternionDirectIntegrationRotationalMechanics::getOrientation() const
-{ 
-	return orientation; 
 }
 
 const mat4& QuaternionDirectIntegrationRotationalMechanics::getOrientationMatrix() const
