@@ -1,21 +1,21 @@
-#include "RotationalMechanics.h"
+#include "MatrixRotationalMechanics.h"
 #include <glm/gtx/matrix_operation.hpp>
 
-RotationalMechanics::RotationalMechanics()
+MatrixRotationalMechanics::MatrixRotationalMechanics()
 {
 }
 
 
-RotationalMechanics::~RotationalMechanics()
+MatrixRotationalMechanics::~MatrixRotationalMechanics()
 {
 }
 
-void RotationalMechanics::setAngularMomentum(const vec3& _angularMomentum)
+void MatrixRotationalMechanics::setAngularMomentum(const vec3& _angularMomentum)
 {
 	angularMomentum = _angularMomentum;
 }
 
-void RotationalMechanics::update(float dt)
+void MatrixRotationalMechanics::update(float dt)
 {
 	vec3 angVelocity;
 	angVelocity = vec3(iTensorOfInertia * vec4(angularMomentum, 0));
@@ -31,12 +31,12 @@ void RotationalMechanics::update(float dt)
 	tensorOfInertia = iQ * tensorOfInertia * Q;
 }
 
-const mat4& RotationalMechanics::getOrientation() const
+const mat4& MatrixRotationalMechanics::getOrientation() const
 { 
 	return orientation; 
 }
 
-void RotationalMechanics::setInertia(vec3 diag)
+void MatrixRotationalMechanics::setInertia(vec3 diag)
 {
 	tensorOfInertia = glm::diagonal4x4( vec4(diag, 0.0f) );
 	iTensorOfInertia = mat4(0.0f);

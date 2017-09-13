@@ -5,9 +5,8 @@
 
 using glm::mat4;
 using glm::vec3;
-using glm::vec4;
 
-class RotationalMechanics
+class MatrixRotationalMechanics : public RotationalMechanics
 {
 	mat4 orientation;			
 	mat4 tensorOfInertia;	

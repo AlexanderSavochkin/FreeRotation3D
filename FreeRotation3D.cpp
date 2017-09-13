@@ -41,10 +41,10 @@ static const GLfloat g_vertex_buffer_data[] = {
     -1.0f,-1.0f,-1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.39852f, 0.7724f,
     -1.0f, 1.0f,-1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.39852f, 0.9867f, // triangle 2 : end
 
-	//Back
-	1.0f, 1.0f,-1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.7587f, 0.9867f,
-	1.0f,-1.0f,-1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.7587f, 0.7724f,
-	-1.0f,-1.0f,-1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.39852f, 0.7724f,
+    //Back
+    1.0f, 1.0f,-1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.7587f, 0.9867f,
+    1.0f,-1.0f,-1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.7587f, 0.7724f,
+    -1.0f,-1.0f,-1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.39852f, 0.7724f,
 
     //Bottom
     1.0f,-1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.7587f, 0.5249f,
@@ -61,10 +61,10 @@ static const GLfloat g_vertex_buffer_data[] = {
     -1.0f,-1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.39852f, 0.5344f,
     1.0f,-1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.7587f, 0.5344f,
 
-	//Front
-	1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.7587f, 0.3040f,
-	-1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.39852f, 0.3040f,
-	1.0f,-1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.7587f, 0.5344f,
+    //Front
+    1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.7587f, 0.3040f,
+    -1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.39852f, 0.3040f,
+    1.0f,-1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.7587f, 0.5344f,
 
     //Right
     1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.7655f, 0.3040f,
@@ -125,7 +125,6 @@ GLuint LoadShaders(const char * vertex_file_path, const char * fragment_file_pat
     GLint Result = GL_FALSE;
     int InfoLogLength;
 
-
     // Compile Vertex Shader
     printf("Compiling shader : %s\n", vertex_file_path);
     char const * VertexSourcePointer = VertexShaderCode.c_str();
@@ -141,8 +140,6 @@ GLuint LoadShaders(const char * vertex_file_path, const char * fragment_file_pat
         printf("%s\n", &VertexShaderErrorMessage[0]);
     }
 
-
-
     // Compile Fragment Shader
     printf("Compiling shader : %s\n", fragment_file_path);
     char const * FragmentSourcePointer = FragmentShaderCode.c_str();
@@ -157,8 +154,6 @@ GLuint LoadShaders(const char * vertex_file_path, const char * fragment_file_pat
         glGetShaderInfoLog(FragmentShaderID, InfoLogLength, NULL, &FragmentShaderErrorMessage[0]);
         printf("%s\n", &FragmentShaderErrorMessage[0]);
     }
-
-
 
     // Link the program
     printf("Linking program\n");
@@ -176,7 +171,6 @@ GLuint LoadShaders(const char * vertex_file_path, const char * fragment_file_pat
         printf("%s\n", &ProgramErrorMessage[0]);
     }
 
-
     glDetachShader(ProgramID, VertexShaderID);
     glDetachShader(ProgramID, FragmentShaderID);
 
@@ -186,11 +180,32 @@ GLuint LoadShaders(const char * vertex_file_path, const char * fragment_file_pat
     return ProgramID;
 }
 
-int main()
+const char* const MATRIX_MODEL = "matrix";
+const char* const QUATERNION_DI_MODEL = "quaternion_di";
+
+RotationalMechanics* CreateRotationMechanicsModel(const string& model)
+{
+    if (model == QUATERNION_DI_MODEL)
+    {
+        return new QuaternionDirectIntegrationRotationalMechanics;
+    }
+    else
+    {
+        return new MatrixRotationalMechanics;
+    }
+}
+
+int main(int argc, char **argv)
 {
     float width = 3.0f, height = 2.0f, depth = 1.0f;
 
-    RotationalMechanics mechanicalModel;
+    string modelName = MATRIX_MODEL;
+    if (argc >= 2)
+    {
+        modelName = argv[1];    
+    }
+
+    RotationalMechanics *mechanicalModel = CreateRotationMechanicsModel(modelName);
     mechanicalModel.setAngularMomentum(vec3(0.005f, 14.0f, 0.005f));
     mechanicalModel.setInertia(vec3(
         height*height + depth*depth, 
@@ -223,13 +238,11 @@ int main()
     // Accept fragment if it closer to the camera than the former one
     glDepthFunc(GL_LESS);
 
-
     GLuint programID = LoadShaders("Shaders/simple.vertexshader", "Shaders/simple.fragmentshader ");
 
     // Get a handle for our "MVP" uniform
     GLuint MVPMatrixID = glGetUniformLocation(programID, "MVP");
     GLuint iMtMatrixID = glGetUniformLocation(programID, "iMt");
-
 
     // Projection matrix : 45° Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
     glm::mat4 Projection = glm::perspective(45.0f, 4.0f / 3.0f, 0.1f, 100.0f);
@@ -247,11 +260,9 @@ int main()
     // The following commands will talk about our 'vertexbuffer' buffer
     glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
 
-
     GLuint vertexarray;
     glGenVertexArrays(1, &vertexarray);
     glBindVertexArray(vertexarray);
-
 
     // Give our vertices to OpenGL.
     glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data), g_vertex_buffer_data, GL_STATIC_DRAW);
@@ -265,7 +276,6 @@ int main()
         0           // array buffer offset
     );
     glEnableVertexAttribArray(0);
-
 
     // 2nd attribute buffer : colors
     glVertexAttribPointer(
@@ -311,9 +321,6 @@ int main()
     glUniform3f(light_color, 1.0f, 1.0f, 1.0f);
     glUniform3f(light_dir, 0.0f, -1.0f, 1.0f);
     glUniform3f(camera_position_ref, camera_position.x, camera_position.y, camera_position.z);
-
-
-
 
     sf::Image img_data;
     if (!img_data.loadFromFile(texturename))
@@ -405,6 +412,7 @@ int main()
     }
 
     // release resources...
+    delete mechanicalModel;
 
     return 0;
 }
