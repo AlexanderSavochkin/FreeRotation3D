@@ -3,8 +3,24 @@
 #include <glm/gtx/quaternion.hpp>
 
 QuaternionDirectIntegrationRotationalMechanics::QuaternionDirectIntegrationRotationalMechanics():
-	orientation(1.0f, 0.0f, 0.0f, 0.0f), d_orientation_dt(0.0f, 0.02f, 0.5f, 0.01f)
+	orientation(1.0f, 0.0f, 0.0f, 0.0f), d_orientation_dt(0.0f, 0.02f, 0.5f, 0.01f), first_iteration(true)
 {
+	//Angular velocity in body frame
+	quat orientation_bar = conjugate(orientation);
+	quat q_qbarqdot_2 = 2.0f *	orientation_bar * d_orientation_dt;
+	vec3 w_body_frame(q_qbarqdot_2.x, q_qbarqdot_2.y, q_qbarqdot_2.z);
+
+	//Angular momentum in body frame
+	vec3 angular_momentum_body_frame(
+		w_body_frame.x * tensorOfInertia.x,
+		w_body_frame.y * tensorOfInertia.y,
+		w_body_frame.z * tensorOfInertia.z);
+
+	//Angular momentum in world frame
+	angularMomentum = orientation * angular_momentum_body_frame * orientation_bar;
+
+	//energy
+	energy = 0.5f * dot(w_body_frame, angular_momentum_body_frame);
 }
 
 
@@ -19,14 +35,34 @@ void QuaternionDirectIntegrationRotationalMechanics::setAngularMomentum(const ve
 
 void QuaternionDirectIntegrationRotationalMechanics::update(float dt)
 {
-	orientation = orientation + d_orientation_dt * dt;
-	d_orientation_dt = d_orientation_dt + d2_Orientation_d2t(orientation, d_orientation_dt) * dt;
+	if (first_iteration)
+	{
+		prev_orientation = orientation;
+		orientation = orientation + d_orientation_dt * dt;
+		d_orientation_dt = d_orientation_dt + d2_Orientation_d2t(orientation, d_orientation_dt) * dt;
+		first_iteration = false;
+	}
+	else
+	{
+		quat predicted_orientation = 2.0f * orientation
+			+ (-1.0f) * prev_orientation;
+
+		d_orientation_dt = 0.5f * (predicted_orientation + (-1.0f) * prev_orientation) / dt;
+
+		quat next_orientation = 2.0f * orientation
+			+ (-1.0f) * prev_orientation
+			+ 0.5f * d2_Orientation_d2t(orientation, d_orientation_dt) * dt * dt;
+
+		prev_orientation = orientation;
+		orientation = next_orientation;
+	}
 	orientation = normalize(orientation);
+	orientation_matrix = glm::toMat4(orientation);
 }
 
 const mat4& QuaternionDirectIntegrationRotationalMechanics::getOrientationMatrix() const
 {
-	return glm::toMat4(orientation);
+	return orientation_matrix;
 }
 
 void QuaternionDirectIntegrationRotationalMechanics::setInertia(vec3 diag)
